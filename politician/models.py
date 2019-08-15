@@ -4,13 +4,15 @@ from django.db import models
 class Politician(models.Model):
     DEPUTY = "DEPUTY"
     SENATOR = "SENATOR"
+    ROLES = (
+        (DEPUTY, "Deputado"),
+        (SENATOR, "Senador"),
+    )
 
     picture = models.CharField(max_length=250, null=True, blank=True)
     name = models.CharField(max_length=150)
-    role = models.CharField(max_length=50, choices=(
-        (DEPUTY, "Deputado"),
-        (SENATOR, "Senador"),
-    ), null=True, blank=True)
+    role = models.CharField(
+        max_length=50, choices=ROLES, null=True, blank=True)
     party = models.ForeignKey(
         'Party', on_delete=models.CASCADE, null=True, blank=True)
     external_id = models.CharField(max_length=15, null=True, blank=True)
