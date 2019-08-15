@@ -1,0 +1,12 @@
+# App files and folders
+**/__pycache__
+**/migrations/*
+db.sqlite3
+node_modules
+static
+venv
+
+# OS and IDE files and folders
+.idea
+.vscode
+nbproject

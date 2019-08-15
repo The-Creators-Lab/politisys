@@ -1,0 +1,4 @@
+Django==2.2.4
+djangorestframework==3.10.2
+requests==2.22.0
+xmltodict==0.12.0
