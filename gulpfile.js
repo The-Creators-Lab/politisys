@@ -102,6 +102,12 @@ function css() {
     .pipe(browsersync.stream());
 }
 
+function images() {
+  return gulp
+    .src("./templates/img/*")
+    .pipe(gulp.dest("./static/img"))
+}
+
 // Watch files
 function watchFiles() {
   gulp.watch("./templates/scss/**/*", css);
@@ -110,7 +116,7 @@ function watchFiles() {
 
 // Define complex tasks
 const vendor = gulp.series(clean, modules);
-const build = gulp.series(vendor, css);
+const build = gulp.series(vendor, css, images);
 const watch = gulp.series(build, gulp.parallel(watchFiles, browserSync));
 
 // Export tasks
