@@ -1,1 +1,1 @@
-web: python manage.py makemigrations && python manage.py migrate && gunicorn politisys.wsgi
+web: python manage.py makemigrations && python manage.py migrate && npm install && npm run build && gunicorn politisys.wsgi
