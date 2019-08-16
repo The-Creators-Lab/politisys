@@ -1,0 +1,35 @@
+{% load calculator %}
+
+<tfoot>
+    <tr>
+        <td colspan="{{colspan}}">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item {%if pagination.page == 1%}disabled{%endif%}">
+                        <a class="page-link" href="?page={{pagination.page|sub:1}}">
+                            Previous
+                        </a>
+                    </li>
+                    {% for item in pagination.pages %}
+                    <li class="page-item {%if pagination.page == item|add:1%}active{%endif%}">
+                        <a class="page-link" href="?page={{item|add:1}}">
+                            {{ item|add:1}}
+                        </a>
+                    </li>
+                    {% endfor %}
+                    <li class="page-item {%if pagination.page == pagination.total_pages%}disabled{%endif%}">
+                        <a class="page-link" href="?page={{pagination.page|add:1}}">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="{{colspan}}">
+            Showing from {{pagination.offset}} to {{pagination.limit}}
+            of {{pagination.total}}
+        </td>
+    </tr>
+</tfoot>

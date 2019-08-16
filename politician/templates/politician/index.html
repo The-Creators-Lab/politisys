@@ -1,6 +1,8 @@
 {% extends 'masterpage.html' %}
 
 {% block content %}
+{% include 'searchbar.html' %}
+
 <section class="features-icons text-center">
     <div class="container">
         <div class="row">
@@ -15,9 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr>
-                            <td colspan="4">Nenhum resultado encontrado</td>
-                        </tr> -->
+                        {% if politicians|length > 0 %}
                         {% for politician in politicians %}
                         <tr>
                             <td><img src="{{ politician.picture }}" width="60" /></td>
@@ -26,7 +26,13 @@
                             <td>{{ politician.party.name }}</td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="4">Nenhum resultado encontrado</td>
+                        </tr>
+                        {% endif %}
                     </tbody>
+                    {% include 'paginator.html' with colspan=4 %}
                 </table>
             </div>
         </div>
