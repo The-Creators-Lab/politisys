@@ -28,7 +28,12 @@
     </tr>
     <tr>
         <td colspan="{{colspan}}">
-            Showing from {{pagination.offset}} to {{pagination.limit}}
+            Showing from {{pagination.offset}} to
+            {% if pagination.limit > pagination.total %}
+            {{pagination.total}}
+            {% else %}
+            {{pagination.limit}}
+            {% endif %}
             of {{pagination.total}}
         </td>
     </tr>

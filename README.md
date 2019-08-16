@@ -13,5 +13,10 @@ source venv/bin/activate
 pip install -r requirements
 npm install
 npm run build
+```
+
+## Executing
+After building and preparing environment, everything is ready for launching.
+```bash
 python manage.py runserver
 ```
