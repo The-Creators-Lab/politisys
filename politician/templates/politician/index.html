@@ -21,7 +21,11 @@
                         {% for politician in politicians %}
                         <tr>
                             <td><img src="{{ politician.picture }}" width="60" /></td>
-                            <td>{{ politician.name }}</td>
+                            <td>
+                                <a href="{% url 'politician_profile' politician.id %}">
+                                    {{ politician.name }}
+                                </a>
+                            </td>
                             <td>{{ politician.get_role }}</td>
                             <td>{{ politician.party.name }}</td>
                         </tr>

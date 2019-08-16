@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from party.models import Party
+from party.services import PartyService
 from politician.models import Politician
-from politician.services import PartyService, SenateService, CongressService
+from politician.services import SenateService, CongressService
 
 
 class PartiesFilter(admin.SimpleListFilter):

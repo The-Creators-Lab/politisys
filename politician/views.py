@@ -30,3 +30,13 @@ def index(request):
             "pages": range(ceil(total_pages))
         }
     })
+
+
+def profile(request, politician_id):
+    politician = Politician.objects \
+        .filter(id=politician_id) \
+        .first()
+
+    return render(request, "politician/profile.html", {
+        "politician": politician
+    })
