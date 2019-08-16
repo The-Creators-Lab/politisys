@@ -1,0 +1,13 @@
+{
+    "name": "Politisys",
+    "description": "Brazilian political infographic",
+    "image": "heroku/python",
+    "repository": "https://github.com/politisys/politisys",
+    "keywords": [
+        "python",
+        "django"
+    ],
+    "addons": [
+        "heroku-postgresql"
+    ]
+}
