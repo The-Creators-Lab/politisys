@@ -1,6 +1,7 @@
 # App files and folders
 **/__pycache__
 **/migrations/*
+.env
 db.sqlite3
 node_modules
 static
