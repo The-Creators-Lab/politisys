@@ -1,3 +1,4 @@
+[![TravisCI](https://travis-ci.org/politisys/politisys.svg?branch=master)](https://travis-ci.org/politisys/politisys)
 # Politisys
 
 ## Necessary tools
