@@ -49,6 +49,10 @@ class PoliticianAdmin(admin.ModelAdmin):
     list_filter = [PoliticianRoleFilter, PartiesFilter]
     search_fields = ["name", "party__initials", "party__name"]
 
+    def get_queryset(self, request):
+        queryset = super(PoliticianAdmin, self).get_queryset(request)
+        return queryset.select_related("party")
+
     def get_picture(self, obj):
         if not obj.picture:
             return "-"

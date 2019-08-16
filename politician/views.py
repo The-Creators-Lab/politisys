@@ -5,12 +5,13 @@ from politician.models import Politician
 
 def index(request):
     query = Politician.objects \
+        .select_related("party") \
         .order_by("name") \
         .filter(active=True)
 
     search = request.GET.get("search")
     if search:
-        query = query.filter(name__contains=search)
+        query = query.filter(name__icontains=search)
 
     page = int(request.GET.get("page", "1"))
     total = query.count()

@@ -31,8 +31,8 @@ class Politician(models.Model):
 
 
 class Party(models.Model):
-    name = models.CharField(max_length=100)
-    initials = models.CharField(max_length=10)
+    name = models.CharField(max_length=200)
+    initials = models.CharField(max_length=20)
     external_id = models.CharField(max_length=15, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
