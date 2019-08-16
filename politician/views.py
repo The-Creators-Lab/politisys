@@ -1,26 +1,20 @@
 from math import ceil
 from django.shortcuts import render
-from politician.models import Politician
+from politician.services import PoliticianService
 
 
 def index(request):
-    query = Politician.objects \
-        .select_related("party") \
-        .order_by("name") \
-        .filter(active=True)
-
-    search = request.GET.get("search")
-    if search:
-        query = query.filter(name__icontains=search)
-
     page = int(request.GET.get("page", "1"))
-    total = query.count()
     limit = 100
-    offset = limit * (page - 1)
+
+    service = PoliticianService()
+    total, politicians, offset = service.get_list(
+        limit=limit, page=page, search=request.GET.get("search"))
+
     total_pages = total / limit
 
     return render(request, "politician/index.html", {
-        "politicians": query[offset:offset + limit],
+        "politicians": politicians,
         "pagination": {
             "total": total,
             "limit": limit,
@@ -33,9 +27,8 @@ def index(request):
 
 
 def profile(request, politician_id):
-    politician = Politician.objects \
-        .filter(id=politician_id) \
-        .first()
+    service = PoliticianService()
+    politician = service.get_by_id(politician_id)
 
     return render(request, "politician/profile.html", {
         "politician": politician

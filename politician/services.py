@@ -3,11 +3,16 @@ import xmltodict
 from party.models import Party
 from party.services import PartyService
 from politician.models import Politician
+from politisys.services import BaseQueryService
 
 
-class PoliticianService:
+class PoliticianService(BaseQueryService):
+    model = Politician
+    select_related = ["party"]
 
     def __init__(self):
+        super(BaseQueryService, self).__init__()
+
         self._party_service = PartyService()
         self._parties_by_initials = {}
 
@@ -15,6 +20,12 @@ class PoliticianService:
         return Politician.objects \
             .filter(external_id=external_id, role=role) \
             .first()
+
+    def additional_queryset(self, queryset, params):
+        if "search" in params and params["search"]:
+            queryset = queryset.filter(name__icontains=params["search"])
+
+        return queryset.filter(active=True)
 
     def _get_party_by_initial(self, initials):
         if initials in self._parties_by_initials:
