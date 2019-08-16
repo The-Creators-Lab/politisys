@@ -5,7 +5,8 @@
 .env
 db.sqlite3
 node_modules
-static
+static/*
+!static/.gitkeep
 staticfiles
 venv
 
