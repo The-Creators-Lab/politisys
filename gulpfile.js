@@ -12,7 +12,7 @@ const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 
-const staticFolder = "./static/";
+const staticFolder = "./staticfiles/";
 
 // Load package.json for banner
 const pkg = require('./package.json');
@@ -93,19 +93,19 @@ function css() {
     .pipe(header(banner, {
       pkg: pkg
     }))
-    .pipe(gulp.dest("./static/css"))
+    .pipe(gulp.dest(`./${staticFolder}/css`))
     .pipe(rename({
       suffix: ".min"
     }))
     .pipe(cleanCSS())
-    .pipe(gulp.dest("./static/css"))
+    .pipe(gulp.dest(`./${staticFolder}/css`))
     .pipe(browsersync.stream());
 }
 
 function images() {
   return gulp
     .src("./templates/img/*")
-    .pipe(gulp.dest("./static/img"))
+    .pipe(gulp.dest(`./${staticFolder}/img`))
 }
 
 // Watch files
