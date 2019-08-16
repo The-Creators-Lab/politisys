@@ -1,7 +1,8 @@
 from collections import OrderedDict
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from politician.models import Party, Politician
+from party.models import Party
+from politician.models import Politician
 from politician.services import PartyService, SenateService, CongressService
 
 
@@ -45,9 +46,9 @@ class PoliticianRoleFilter(admin.SimpleListFilter):
 @admin.register(Politician)
 class PoliticianAdmin(admin.ModelAdmin):
     actions = ["load_politicians"]
-    list_display = ["get_picture", "name", "role", "party", "updated_at"]
-    list_filter = [PoliticianRoleFilter, PartiesFilter]
-    search_fields = ["name", "party__initials", "party__name"]
+    list_display = ["get_picture", "name", "role", "updated_at"]
+    list_filter = [PoliticianRoleFilter]  # , PartiesFilter]
+    search_fields = ["name"]  # , "party__initials", "party__name"]
 
     def get_queryset(self, request):
         queryset = super(PoliticianAdmin, self).get_queryset(request)

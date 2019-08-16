@@ -1,6 +1,7 @@
 import requests
 import xmltodict
-from politician.models import Party, Politician
+from party.models import Party
+from politician.models import Politician
 
 
 class PartyService:

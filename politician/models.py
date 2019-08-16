@@ -1,9 +1,10 @@
 from django.db import models
+from party.models import Party
 
 
 class Politician(models.Model):
-    DEPUTY = "DEPUTY"
-    SENATOR = "SENATOR"
+    DEPUTY = "Role:Deputy"
+    SENATOR = "Role:Senator"
     ROLES = (
         (DEPUTY, "Deputado"),
         (SENATOR, "Senador"),
@@ -14,7 +15,7 @@ class Politician(models.Model):
     role = models.CharField(
         max_length=50, choices=ROLES, null=True, blank=True)
     party = models.ForeignKey(
-        'Party', on_delete=models.CASCADE, null=True, blank=True)
+        Party, on_delete=models.CASCADE, null=True, blank=True)
     external_id = models.CharField(max_length=15, null=True, blank=True)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -28,15 +29,3 @@ class Politician(models.Model):
             return "{}: {}".format(self.party.initials, self.name)
 
         return self.name
-
-
-class Party(models.Model):
-    name = models.CharField(max_length=200)
-    initials = models.CharField(max_length=20)
-    external_id = models.CharField(max_length=15, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return "{}: {}".format(
-            self.initials,
-            self.name)
