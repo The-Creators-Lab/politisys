@@ -66,6 +66,7 @@ class SenateService(PoliticianService):
             politician.external_id = identity["CodigoParlamentar"]
             politician.party = self._get_party_by_initial(
                 identity["SiglaPartidoParlamentar"])
+            politician.role_state = identity["UfParlamentar"]
 
             politician.save()
 
@@ -94,6 +95,7 @@ class CongressService(PoliticianService):
             politician.name = self._capitalize_name(data["nome"])
             politician.external_id = data["id"]
             politician.party = self._get_party_by_initial(data["siglaPartido"])
+            politician.role_state = data["siglaUf"]
 
             politician.save()
 

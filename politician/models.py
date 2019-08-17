@@ -17,6 +17,7 @@ class Politician(models.Model):
     party = models.ForeignKey(
         Party, on_delete=models.CASCADE, null=True, blank=True)
     external_id = models.CharField(max_length=15, null=True, blank=True)
+    role_state = models.CharField(max_length=2, null=True, blank=True)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

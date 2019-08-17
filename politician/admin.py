@@ -46,7 +46,7 @@ class PoliticianRoleFilter(admin.SimpleListFilter):
 @admin.register(Politician)
 class PoliticianAdmin(admin.ModelAdmin):
     actions = ["load_politicians"]
-    list_display = ["get_picture", "name", "role", "updated_at"]
+    list_display = ["get_picture", "name", "role", "role_state", "updated_at"]
     list_filter = [PoliticianRoleFilter]  # , PartiesFilter]
     search_fields = ["name"]  # , "party__initials", "party__name"]
 
