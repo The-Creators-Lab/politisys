@@ -46,6 +46,20 @@ class SenateService(PoliticianService):
 
         self._host = "http://legis.senado.leg.br"
 
+    def get_last_law_projects(self, politician):
+        response = requests.get("{}/dadosabertos/senador/{}/autorias".format(
+            self._host,
+            politician.external_id), headers={
+                "Accept": "application/json"
+        })
+        data = response.json()
+
+        return [{
+            "id": news["Materia"]["IdentificacaoMateria"]["CodigoMateria"],
+            "code": news["Materia"]["IdentificacaoMateria"]["DescricaoIdentificacaoMateria"],
+            "description": news["Materia"]["EmentaMateria"] if "EmentaMateria" in news["Materia"] else None,
+        } for news in data["MateriasAutoriaParlamentar"]["Parlamentar"]["Autorias"]["Autoria"]]
+
     def load_politicians(self):
         response = requests.get(
             "{}/dadosabertos/senador/lista/atual".format(self._host))
@@ -77,6 +91,26 @@ class CongressService(PoliticianService):
         super(CongressService, self).__init__()
 
         self._host = "https://dadosabertos.camara.leg.br"
+
+    def get_last_law_projects(self, politician):
+        response = requests.get(
+            "{}/api/v2/proposicoes".format(self._host),
+            params={
+                "idDeputadoAutor": politician.external_id,
+                "itens": 1000
+            }, headers={
+                "Accept": "application/json"
+            })
+        data = response.json()
+
+        return [{
+            "id": law["id"],
+            "code": "{} {}/{}".format(
+                law["siglaTipo"],
+                law["numero"],
+                law["ano"]),
+            "description": law["ementa"]
+        } for law in data["dados"]]
 
     def load_politicians(self):
         response = requests.get(

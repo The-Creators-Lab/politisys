@@ -1,5 +1,6 @@
 from math import ceil
 from django.shortcuts import render
+from politician.factories import CongressServiceFactory
 from politician.services import PoliticianService
 
 
@@ -32,4 +33,16 @@ def profile(request, politician_id):
 
     return render(request, "politician/profile.html", {
         "politician": politician
+    })
+
+
+def last_law_projects(request, politician_id):
+    service = PoliticianService()
+    politician = service.get_by_id(politician_id)
+
+    congress_service = CongressServiceFactory(politician.role)
+    last_law_projects = congress_service.get_last_law_projects(politician)
+
+    return render(request, "politician/last_law_projects.html", {
+        "last_law_projects": last_law_projects
     })

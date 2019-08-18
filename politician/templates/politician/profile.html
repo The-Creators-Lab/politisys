@@ -42,6 +42,30 @@
                 <small>{{ politician.role_state }}</small>
             </div>
         </div>
+        <hr />
+
+        <section class="features-icons text-center">
+            <div class="container">
+                <h3>Últimos projetos de lei</h3>
+
+                <div class="last_law_projects">
+                    <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
+                        width="10%" />
+                </div>
+            </div>
+        </section>
     </div>
 </section>
+
+{% endblock %}
+
+{% block static %}
+<script type="text/javascript">
+
+    $.ajax({
+        url: "/politician/{{ politician.id }}/last_law_projects",
+        contentType: "text/html"
+    }).then(data => $(".last_law_projects").html(data));
+
+</script>
 {% endblock %}

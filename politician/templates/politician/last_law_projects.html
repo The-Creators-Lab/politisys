@@ -1,0 +1,16 @@
+<table class="table table-hover table-striped">
+    <thead>
+        <tr>
+            <th>PEC</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in last_law_projects %}
+        <tr>
+            <td>{{ project.code }}</td>
+            <td>{{ project.description }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
