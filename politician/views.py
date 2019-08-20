@@ -1,5 +1,9 @@
 from math import ceil
+from django.contrib import humanize
 from django.shortcuts import render
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from politician.factories import CongressServiceFactory
 from politician.services import PoliticianService
 
@@ -41,6 +45,36 @@ def profile(request, politician_id):
 
     return render(request, "politician/profile.html", {
         "politician": politician
+    })
+
+
+@api_view()
+def get_total_expenses(request, politician_id):
+    service = PoliticianService()
+    politician = service.get_by_id(politician_id)
+
+    total_expenses = 0
+    congress_service = CongressServiceFactory(politician.role)
+    for expense in congress_service.get_current_year_expenses(politician):
+        total_expenses += expense["price"]
+
+    return Response({
+        "total": total_expenses,
+        "total_formatted": '{:,.2f}'.format(total_expenses)
+        .replace(",", "v")
+        .replace(".", ",")
+        .replace("v", ".")
+    }, status.HTTP_200_OK)
+
+
+def current_year_expenses(request, politician_id):
+    service = PoliticianService()
+    politician = service.get_by_id(politician_id)
+
+    congress_service = CongressServiceFactory(politician.role)
+    return render(request, "politician/current_year_expenses.html", {
+        "politician": politician,
+        "expenses": congress_service.get_current_year_expenses(politician)
     })
 
 

@@ -47,8 +47,8 @@ class PoliticianRoleFilter(admin.SimpleListFilter):
 class PoliticianAdmin(admin.ModelAdmin):
     actions = ["load_politicians"]
     list_display = ["get_picture", "name", "role", "role_state", "updated_at"]
-    list_filter = [PoliticianRoleFilter]  # , PartiesFilter]
-    search_fields = ["name"]  # , "party__initials", "party__name"]
+    list_filter = [PoliticianRoleFilter, PartiesFilter]
+    search_fields = ["name", "party__initials", "party__name"]
 
     def get_queryset(self, request):
         queryset = super(PoliticianAdmin, self).get_queryset(request)

@@ -64,6 +64,9 @@ class SenateService(PoliticianService):
             "genre": identity["SexoParlamentar"]
         }
 
+    def get_current_year_expenses(self, politician):
+        return []
+
     def get_last_law_projects(self, politician):
         response = requests.get("{}/dadosabertos/senador/{}/autorias".format(
             self._host,
@@ -117,12 +120,35 @@ class CongressService(PoliticianService):
                 "Accept": "application/json"
             })
         data = response.json()
+        print(data, response.content)
 
         return {
             "birthday": datetime.strptime(data["dados"]["dataNascimento"], "%Y-%m-%d"),
             "email": data["dados"]["email"],
             "genre": "Masculino" if data["dados"]["sexo"] == "M" else "Feminino"
         }
+
+    def get_current_year_expenses(self, politician):
+        response = requests.get(
+            "{}/api/v2/deputados/{}/despesas".format(
+                self._host, politician.external_id),
+            params={
+                "itens": 10000,
+                "ano": datetime.now().year
+            },
+            headers={
+                "Accept": "application/json"
+            })
+        data = response.json()
+
+        return [{
+            "document": expense["numDocumento"],
+            "code": expense["codDocumento"],
+            "type": expense["tipoDespesa"],
+            "provider": expense["nomeFornecedor"],
+            "price": expense["valorDocumento"],
+            "date": datetime.strptime(expense["dataDocumento"], "%Y-%m-%d") if expense["dataDocumento"] else None
+        } for expense in data["dados"]]
 
     def get_last_law_projects(self, politician):
         response = requests.get(

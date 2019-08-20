@@ -5,51 +5,12 @@
 
 <section class="features-icons text-center">
     <div class="container">
-        <div class="row d-none d-md-block d-lg-block">
-            <div class="col-lg-12">
-                <h1>
-                    <img src="{{ politician.picture }}" width=100 />
-                    {{ politician.name }} #{{ politician.id }}
-                </h1>
-            </div>
-        </div>
-
-        <div class="row d-sm-block d-md-none">
-            <div class="col-sm-12">
-                <img src="{{ politician.picture }}" width="90%" />
-            </div>
-            <div class="col-sm-12">
-                <h1>
-                    {{ politician.name }}
-                </h1>
-            </div>
-        </div>
-        <hr />
+        {% include 'politician/profile_basic.html' %}
 
         <div class="row">
-            <div class="col-md-3 col-xs-12">
-                <h3>Partido</h3>
-                <small>{{ politician.party }}</small>
-            </div>
-
-            <div class="col-md-4 col-xs-12">
-                <h3>Cargo</h3>
-                <small>{{ politician.role }}</small>
-            </div>
-
             <div class="col-md-4 col-xs-12">
                 <h3>Estado</h3>
                 <small>{{ politician.role_state }}</small>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-4 offset-md-2">
-                <h3>E-mail</h3>
-                <small>
-                    <a href="mailto:{{ politician.email }}">
-                        {{ politician.email }}
-                    </a>
-                </small>
             </div>
 
             <div class="col-xs-12 col-md-4">
@@ -58,6 +19,14 @@
                     {% if politician.birthdate %}
                     {{ politician.birthdate|date:'d/m/Y' }}
                     {% endif %}
+                </small>
+            </div>
+
+            <div class="col-xs-12 col-md-4 current_year_expenses">
+                <h3>Despesas {% now 'Y' %} </h3>
+                <small>
+                    <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
+                        width="10%" />
                 </small>
             </div>
         </div>
@@ -82,9 +51,19 @@
 <script type="text/javascript">
 
     $.ajax({
-        url: "/politician/{{ politician.id }}/last_law_projects",
+        url: "{% url 'politician_last_law_projects' politician.id %}",
         contentType: "text/html"
     }).then(data => $(".last_law_projects").html(data));
+
+    $.ajax({
+        url: "{% url 'politician_total_expenses' politician.id %}",
+        contentType: "application/json"
+    })
+        .then(data => {
+            const route = "{% url 'politician_current_year_expenses' politician.id %}"
+            $(".current_year_expenses small")
+                .html(`<a href="${route}">R$ ${data.total_formatted}</a>`)
+        });
 
 </script>
 {% endblock %}

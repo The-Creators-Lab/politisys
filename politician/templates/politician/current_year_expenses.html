@@ -1,0 +1,47 @@
+{% extends 'masterpage.html' %}
+
+{% block content %}
+{% include 'searchbar.html' %}
+
+<section class="features-icons text-center">
+    <div class="container">
+        {% include 'politician/profile_basic.html' %}
+        <hr />
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Código</th>
+                            <th>Tipo</th>
+                            <th>Fornecedor</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if expenses|length > 0 %}
+                        {% for expense in expenses %}
+                        <tr>
+                            <td>{{ expense.document }}</td>
+                            <td>{{ expense.number }}</td>
+                            <td>{{ expense.type }}</td>
+                            <td>{{ expense.provider }}</td>
+                            <td>{{ expense.price }}</td>
+                            <td>{{ expense.date|date:'d/m/Y' }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6">Nenhum resultado encontrado</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
