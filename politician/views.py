@@ -31,6 +31,14 @@ def profile(request, politician_id):
     service = PoliticianService()
     politician = service.get_by_id(politician_id)
 
+    if not politician.birthdate:
+        congress_service = CongressServiceFactory(politician.role)
+        data = congress_service.get_by_id(politician.external_id)
+
+        politician.birthdate = data["birthday"]
+        politician.email = data["email"]
+        politician.save()
+
     return render(request, "politician/profile.html", {
         "politician": politician
     })

@@ -12,6 +12,8 @@ class Politician(models.Model):
 
     picture = models.CharField(max_length=250, null=True, blank=True)
     name = models.CharField(max_length=150)
+    birthdate = models.DateField(null=True, blank=True)
+    email = models.CharField(max_length=150, null=True, blank=True)
     role = models.CharField(
         max_length=50, choices=ROLES, null=True, blank=True)
     party = models.ForeignKey(

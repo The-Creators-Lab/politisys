@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 import xmltodict
 from party.models import Party
@@ -25,7 +26,7 @@ class PoliticianService(BaseQueryService):
         if "search" in params and params["search"]:
             queryset = queryset.filter(name__icontains=params["search"])
 
-        return queryset.filter(active=True)
+        return queryset.filter(active=True).order_by("name")
 
     def _get_party_by_initial(self, initials):
         if initials in self._parties_by_initials:
@@ -45,6 +46,23 @@ class SenateService(PoliticianService):
         super(SenateService, self).__init__()
 
         self._host = "http://legis.senado.leg.br"
+
+    def get_by_id(self, senator_id):
+        response = requests.get(
+            "{}/dadosabertos/senador/{}".format(self._host, senator_id),
+            headers={
+                "Accept": "application/json"
+            })
+        data = response.json()
+
+        politician = data["DetalheParlamentar"]["Parlamentar"]
+        identity = politician["IdentificacaoParlamentar"]
+        basic = politician["DadosBasicosParlamentar"]
+        return {
+            "birthday": datetime.strptime(basic["DataNascimento"], "%Y-%m-%d"),
+            "email": identity["EmailParlamentar"],
+            "genre": identity["SexoParlamentar"]
+        }
 
     def get_last_law_projects(self, politician):
         response = requests.get("{}/dadosabertos/senador/{}/autorias".format(
@@ -91,6 +109,20 @@ class CongressService(PoliticianService):
         super(CongressService, self).__init__()
 
         self._host = "https://dadosabertos.camara.leg.br"
+
+    def get_by_id(self, senator_id):
+        response = requests.get(
+            "{}/api/v2/deputados/{}".format(self._host, senator_id),
+            headers={
+                "Accept": "application/json"
+            })
+        data = response.json()
+
+        return {
+            "birthday": datetime.strptime(data["dados"]["dataNascimento"], "%Y-%m-%d"),
+            "email": data["dados"]["email"],
+            "genre": "Masculino" if data["dados"]["sexo"] == "M" else "Feminino"
+        }
 
     def get_last_law_projects(self, politician):
         response = requests.get(
