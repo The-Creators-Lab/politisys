@@ -68,12 +68,21 @@ function modules() {
     '!./node_modules/jquery/dist/core.js'
   ])
     .pipe(gulp.dest(`./${staticFolder}/jquery`));
+
+  var highCharts = gulp.src("./node_modules/highcharts/**/*")
+    .pipe(gulp.dest(`./${staticFolder}/highcharts`));
+
   // Simple Line Icons
   var simpleLineIconsFonts = gulp.src('./node_modules/simple-line-icons/fonts/**')
     .pipe(gulp.dest(`./${staticFolder}/simple-line-icons/fonts`));
   var simpleLineIconsCSS = gulp.src('./node_modules/simple-line-icons/css/**')
     .pipe(gulp.dest(`./${staticFolder}/simple-line-icons/css`));
-  return merge(bootstrap, fontAwesomeCSS, fontAwesomeWebfonts, jquery, jqueryEasing, simpleLineIconsFonts, simpleLineIconsCSS);
+  return merge(
+    bootstrap,
+    fontAwesomeCSS, fontAwesomeWebfonts,
+    jquery, jqueryEasing,
+    highCharts,
+    simpleLineIconsFonts, simpleLineIconsCSS);
 }
 
 // CSS task

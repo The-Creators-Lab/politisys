@@ -120,7 +120,6 @@ class CongressService(PoliticianService):
                 "Accept": "application/json"
             })
         data = response.json()
-        print(data, response.content)
 
         return {
             "birthday": datetime.strptime(data["dados"]["dataNascimento"], "%Y-%m-%d"),
@@ -134,7 +133,8 @@ class CongressService(PoliticianService):
                 self._host, politician.external_id),
             params={
                 "itens": 10000,
-                "ano": datetime.now().year
+                "ano": datetime.now().year,
+                "ordenarPor": "dataDocumento"
             },
             headers={
                 "Accept": "application/json"
