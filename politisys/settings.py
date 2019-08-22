@@ -45,7 +45,9 @@ INSTALLED_APPS = [
 
     'dashboard',
     'party',
-    'politician'
+    'politician',
+    'proposition',
+    'reports'
 ]
 
 MIDDLEWARE = [

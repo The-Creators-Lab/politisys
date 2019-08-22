@@ -21,5 +21,6 @@ urlpatterns = [
 
     url(r'^', include('dashboard.urls')),
     url(r'^politician/', include('politician.urls')),
+    url(r'^proposition/', include('proposition.urls')),
     url(r'^reports/', include('reports.urls'))
 ]

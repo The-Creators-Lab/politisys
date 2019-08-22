@@ -8,7 +8,11 @@
     <tbody>
         {% for project in last_law_projects %}
         <tr>
-            <td>{{ project.code }}</td>
+            <td>
+                <a href="{% url 'propositions_by_id' politician.role|lower project.id %}">
+                    {{ project.code }}
+                </a>
+            </td>
             <td>{{ project.description }}</td>
         </tr>
         {% endfor %}

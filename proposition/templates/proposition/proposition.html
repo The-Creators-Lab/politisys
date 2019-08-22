@@ -1,0 +1,39 @@
+{% extends 'masterpage.html' %}
+
+{% block content %}
+{% include 'searchbar.html' %}
+
+<section class="features-icons text-center">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-xs-12 col-md-12">
+                <h3>Proposição #{{ proposition.id }}</h3>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <h3>PEC</h3>
+                <small>{{ proposition.code }}</small>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <h3>Criada em</h3>
+                <small>{{ proposition.created_at|date:'d/m/Y H:i' }}</small>
+            </div>
+
+            <div class="col-xs-12 col-sm-12">
+                <h3>Texto</h3>
+                <small>{{ proposition.description }}</small>
+            </div>
+        </div>
+        <hr />
+    </div>
+</section>
+
+{% endblock %}
+
+{% block static %}
+<script type="text/javascript">
+
+
+</script>
+{% endblock %}

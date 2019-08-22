@@ -170,6 +170,27 @@ class CongressService(PoliticianService):
             "description": law["ementa"]
         } for law in data["dados"]]
 
+    def get_proposition_by_id(self, proposition_id):
+        response = requests.get(
+            "{}/api/v2/proposicoes/{}".format(self._host, proposition_id),
+            headers={
+                "Accept": "application/json"
+            })
+        data = response.json()
+
+        law = data["dados"]
+        return {
+            "id": law["id"],
+            "code": "{} {}/{}".format(
+                law["siglaTipo"],
+                law["numero"],
+                law["ano"]),
+            "description": law["ementa"],
+            "created_at": datetime.strptime(
+                law["dataApresentacao"],
+                "%Y-%m-%dT%H:%M")
+        }
+
     def load_politicians(self):
         response = requests.get(
             "{}/api/v2/deputados".format(self._host),

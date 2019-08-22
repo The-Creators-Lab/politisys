@@ -67,5 +67,6 @@ def last_law_projects(request, politician_id):
     last_law_projects = congress_service.get_last_law_projects(politician)
 
     return render(request, "politician/last_law_projects.html", {
-        "last_law_projects": last_law_projects
+        "last_law_projects": last_law_projects,
+        "politician": politician
     })
