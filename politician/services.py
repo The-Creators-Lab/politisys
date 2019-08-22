@@ -188,8 +188,47 @@ class CongressService(PoliticianService):
             "description": law["ementa"],
             "created_at": datetime.strptime(
                 law["dataApresentacao"],
-                "%Y-%m-%dT%H:%M")
+                "%Y-%m-%dT%H:%M"),
+            "status": law["statusProposicao"]["descricaoSituacao"]
         }
+
+    def get_proposition_votes_by_id(self, proposition_id):
+        response = requests.get(
+            "https://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicaoPorID",
+            params={
+                "idProposicao": proposition_id
+            })
+        data = xmltodict.parse(response.content.decode())
+        votations = data.get("proposicao").get("Votacoes").get("Votacao")
+
+        votes = []
+        for vote in votations[0]["votos"]["Deputado"]:
+            votes.append({
+                "vote": True if vote["@Voto"].replace(" ", "") == "Sim" else False,
+                "party": vote["@Partido"].replace(" ", ""),
+                "politician": {
+                    "name": vote["@Nome"],
+                    "external_id": vote["@ideCadastro"]
+                }
+            })
+
+        votes_by_party = {}
+        votes_by_result = {"approved": 0, "rejected": 0}
+        for vote in votes:
+            vote_type = "rejected"
+            if vote["vote"]:
+                vote_type = "approved"
+
+            if vote["party"] not in votes_by_party:
+                votes_by_party[vote["party"]] = {
+                    "approved": 0,
+                    "rejected": 0
+                }
+
+            votes_by_result[vote_type] += 1
+            votes_by_party[vote["party"]][vote_type] += 1
+
+        return votes, votes_by_party, votes_by_result
 
     def load_politicians(self):
         response = requests.get(

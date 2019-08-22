@@ -1,5 +1,7 @@
 {% extends 'masterpage.html' %}
 
+{% load staticfiles %}
+
 {% block content %}
 {% include 'searchbar.html' %}
 
@@ -26,14 +28,118 @@
             </div>
         </div>
         <hr />
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <h3>Resumo</h3>
+            </div>
+
+            <div id="total_proposition_votes" class="col-xs-12 col-sm-12">
+                <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
+                    width="10%" />
+            </div>
+
+            <div id="total_propositon_votes_by_party" class="col-xs-12 col-sm-12">
+                <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
+                    width="10%" />
+            </div>
+        </div>
     </div>
 </section>
 
 {% endblock %}
 
 {% block static %}
+<link href="{% static 'highcharts/css/highcharts.css' %}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{% static 'highcharts/highcharts.js' %}">
+</script>
 <script type="text/javascript">
 
+    $.ajax({
+        url: "{% url 'reports_proposition_votes' proposition_at proposition.id %}"
+    }).then(data => {
+        Highcharts.chart('total_proposition_votes', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Total de votos'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.y} Votos %'
+                    }
+                }
+            },
+            series: [{
+                name: 'Votos',
+                colorByPoint: true,
+                data: [{
+                    name: 'Sim',
+                    y: data.votes_by_result.approved,
+                    color: '#94f6cd'
+                }, {
+                    name: 'Não',
+                    y: data.votes_by_result.rejected,
+                    color: '#d31145'
+                }]
+            }]
+        });
+
+        Highcharts.chart('total_propositon_votes_by_party', {
+            chart: {
+                type: 'column'
+            },
+
+            title: {
+                text: 'Votos por partido'
+            },
+
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: "normal"
+                }
+            },
+
+            xAxis: {
+                categories: Object.keys(data.votes_by_party)
+            },
+
+            yAxis: {
+                min: 0
+            },
+
+            series: [
+                {
+                    name: 'Sim',
+                    data: Object.keys(data.votes_by_party).map(party =>
+                        data.votes_by_party[party].approved)
+                },
+                {
+                    name: 'Não',
+                    data: Object.keys(data.votes_by_party).map(party =>
+                        data.votes_by_party[party].rejected)
+                }
+            ]
+        })
+    })
 
 </script>
 {% endblock %}

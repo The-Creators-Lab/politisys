@@ -3,7 +3,6 @@ from politician.services import CongressService, SenateService
 
 
 def CongressServiceFactory(role):
-    print(role)
     if role == Politician.DEPUTY or role == Politician.DEPUTY.lower():
         return CongressService()
     elif role == Politician.SENATOR or role == Politician.SENATOR.lower():

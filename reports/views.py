@@ -57,3 +57,18 @@ def get_politician_expenses_by_year(request, politician_id):
         report["series"][0]["data"][expense_month] += expense["price"]
 
     return Response(report)
+
+
+@api_view()
+def get_proposition_votes(request, proposition_at, proposition_id):
+    service = CongressServiceFactory(proposition_at)
+    votes, votes_by_party, votes_by_result = service.get_proposition_votes_by_id(
+        proposition_id)
+
+    reports = {
+        "votes": votes,
+        "votes_by_party": votes_by_party,
+        "votes_by_result": votes_by_result
+    }
+
+    return Response(reports)
