@@ -39,6 +39,25 @@ class PoliticianService(BaseQueryService):
         self._parties_by_initials[initials] = party
         return self._get_party_by_initial(initials)
 
+    def _parse_proposition_votes(self, votes):
+        votes_by_party = {}
+        votes_by_result = {"approved": 0, "rejected": 0}
+        for vote in votes:
+            vote_type = "rejected"
+            if vote["vote"]:
+                vote_type = "approved"
+
+            if vote["party"] not in votes_by_party:
+                votes_by_party[vote["party"]] = {
+                    "approved": 0,
+                    "rejected": 0
+                }
+
+            votes_by_result[vote_type] += 1
+            votes_by_party[vote["party"]][vote_type] += 1
+
+        return votes, votes_by_party, votes_by_result
+
 
 class SenateService(PoliticianService):
 
@@ -63,6 +82,33 @@ class SenateService(PoliticianService):
             "email": identity["EmailParlamentar"],
             "genre": identity["SexoParlamentar"]
         }
+
+    def get_proposition_by_id(self, proposition_id):
+        response = requests.get(
+            "{}/dadosabertos/materia/{}".format(self._host, proposition_id),
+            headers={
+                "Accept": "application/json"
+            })
+        data = response.json()
+
+        law = data["DetalheMateria"]["Materia"]
+        identity = law["IdentificacaoMateria"]
+        basic_data = law["DadosBasicosMateria"]
+        status = law["SituacaoAtual"]["Autuacoes"]["Autuacao"]["Situacao"]
+
+        return {
+            "id": identity["CodigoMateria"],
+            "code": identity["DescricaoIdentificacaoMateria"],
+            "description": basic_data["EmentaMateria"],
+            "created_at": datetime.strptime(
+                basic_data["DataApresentacao"],
+                "%Y-%m-%d"),
+            "status": status["DescricaoSituacao"].lower().capitalize()
+        }
+
+    def get_proposition_votes_by_id(self, proposition_id):
+        votes = []
+        return self._parse_proposition_votes(votes)
 
     def get_current_year_expenses(self, politician):
         return []
@@ -198,6 +244,9 @@ class CongressService(PoliticianService):
             params={
                 "idProposicao": proposition_id
             })
+        if response.status_code != 200:
+            return self._parse_proposition_votes([])
+
         data = xmltodict.parse(response.content.decode())
         votations = data.get("proposicao").get("Votacoes").get("Votacao")
 
@@ -212,23 +261,7 @@ class CongressService(PoliticianService):
                 }
             })
 
-        votes_by_party = {}
-        votes_by_result = {"approved": 0, "rejected": 0}
-        for vote in votes:
-            vote_type = "rejected"
-            if vote["vote"]:
-                vote_type = "approved"
-
-            if vote["party"] not in votes_by_party:
-                votes_by_party[vote["party"]] = {
-                    "approved": 0,
-                    "rejected": 0
-                }
-
-            votes_by_result[vote_type] += 1
-            votes_by_party[vote["party"]][vote_type] += 1
-
-        return votes, votes_by_party, votes_by_result
+        return self._parse_proposition_votes(votes)
 
     def load_politicians(self):
         response = requests.get(
