@@ -37,15 +37,37 @@
             <div class="col-xs-12 col-sm-12">
                 <h3>Resumo</h3>
             </div>
+        </div>
+
+        <div class="row">
+            <div id="total_propositon_votes_by_party" class="col-xs-12 col-sm-12">
+                <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
+                    width="10%" />
+            </div>
 
             <div id="total_proposition_votes" class="col-xs-12 col-sm-12">
                 <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
                     width="10%" />
             </div>
 
-            <div id="total_propositon_votes_by_party" class="col-xs-12 col-sm-12">
-                <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
-                    width="10%" />
+            <div class="col-xs-12 col-sm-12">
+                <table id="proposition_votes" class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Partido</th>
+                            <th>Politico</th>
+                            <th>Voto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">
+                                <img src="http://superstorefinder.net/support/wp-content/uploads/2018/01/blue_loading.gif"
+                                    width="10%" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -55,6 +77,15 @@
 
 {% block static %}
 <link href="{% static 'highcharts/css/highcharts.css' %}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .fa-thumbs-up {
+        color: green;
+    }
+
+    .fa-thumbs-down {
+        color: red;
+    }
+</style>
 <script type="text/javascript" src="{% static 'highcharts/highcharts.js' %}">
 </script>
 <script type="text/javascript">
@@ -62,6 +93,16 @@
     $.ajax({
         url: "{% url 'reports_proposition_votes' proposition_at proposition.id %}"
     }).then(data => {
+        $('#proposition_votes tbody').html("");
+        data.votes.forEach(vote => {
+            let tr = "<tr>";
+            tr += `<td>${vote.party}</td>`;
+            tr += `<td>${vote.politician.name}</td>`;
+            tr += `<td><i class="fa fa-thumbs-${vote.vote ? "up" : "down"}"></i></td>`;
+            tr += "</tr>"
+            $('#proposition_votes tbody').append(tr);
+        });
+
         Highcharts.chart('total_proposition_votes', {
             chart: {
                 plotBackgroundColor: null,
