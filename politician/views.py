@@ -48,25 +48,6 @@ def profile(request, politician_id):
     })
 
 
-@api_view()
-def get_total_expenses(request, politician_id):
-    service = PoliticianService()
-    politician = service.get_by_id(politician_id)
-
-    total_expenses = 0
-    congress_service = CongressServiceFactory(politician.role)
-    for expense in congress_service.get_current_year_expenses(politician):
-        total_expenses += expense["price"]
-
-    return Response({
-        "total": total_expenses,
-        "total_formatted": '{:,.2f}'.format(total_expenses)
-        .replace(",", "v")
-        .replace(".", ",")
-        .replace("v", ".")
-    }, status.HTTP_200_OK)
-
-
 def current_year_expenses(request, politician_id):
     service = PoliticianService()
     politician = service.get_by_id(politician_id)

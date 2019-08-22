@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^', include('dashboard.urls')),
-    url(r'^politician/', include('politician.urls'))
+    url(r'^politician/', include('politician.urls')),
+    url(r'^reports/', include('reports.urls'))
 ]

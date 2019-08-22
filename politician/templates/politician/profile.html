@@ -56,7 +56,7 @@
     }).then(data => $(".last_law_projects").html(data));
 
     $.ajax({
-        url: "{% url 'politician_total_expenses' politician.id %}",
+        url: "{% url 'reports_politician_total_expenses' politician.id %}",
         contentType: "application/json"
     })
         .then(data => {
